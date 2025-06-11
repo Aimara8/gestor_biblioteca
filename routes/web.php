@@ -12,7 +12,9 @@ Route::get('/', function () {
 // Agrupamos las rutas que necesitan auth y verified
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', $libros = [
+            'libros' => \App\Models\Libro::orderBy('titulo', 'desc')->paginate(10)
+        ]);
     })->name('dashboard');
 
     Route::resource('libros', LibroController::class);
