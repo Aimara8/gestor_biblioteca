@@ -40,8 +40,7 @@ const deleteLibro = (id) => {
         Books
       </h2>
     </template>
-    <v-container fluid class="pa-6">
-      <v-card flat class="rounded-lg">
+      <v-card flat class="rounded-lg mt-6 mx-4">
         <v-card-title class="d-flex justify-space-between align-center pa-6">
           <v-btn :href="route('libros.create')" color="primary" variant="elevated" prepend-icon="mdi-file-plus"
             size="large">
@@ -75,7 +74,7 @@ const deleteLibro = (id) => {
 
                 <v-tooltip text="Eliminar libro" location="top">
                   <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" @onClick="deleteLibro(item.id)" icon="mdi-delete-outline" variant="text"
+                    <v-btn v-bind="props" @Click="deleteLibro(item.id)" icon="mdi-delete-outline" variant="text"
                       color="error" size="small" class="mx-1" />
                   </template>
                 </v-tooltip>
@@ -100,6 +99,5 @@ const deleteLibro = (id) => {
             active-color="primary" variant="flat"></v-pagination>
         </v-card-actions>
       </v-card>
-    </v-container>
   </AuthenticatedLayout>
 </template>
