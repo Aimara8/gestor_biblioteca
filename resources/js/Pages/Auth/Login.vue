@@ -34,15 +34,11 @@ const submit = () => {
 
         <Head title="Log in" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
-
         <form @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
 
-                <TextInput id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus
+                <TextInput id="email" type="email" class="mt-2 block w-full border border-t-0 border-gray-300 rounded-lg" v-model="form.email" required autofocus
                     autocomplete="username" />
 
                 <InputError class="mt-2" :message="form.errors.email" />
@@ -58,7 +54,7 @@ const submit = () => {
                     </Link>
                 </div>
 
-                <TextInput id="password" type="password" class="mt-1 block w-full" v-model="form.password" required
+                <TextInput id="password" type="password" class="mt-2 block w-full border border-t-0 border-gray-300 rounded-lg" v-model="form.password" required
                     autocomplete="current-password" />
 
                 <InputError class="mt-2" :message="form.errors.password" />
@@ -66,7 +62,7 @@ const submit = () => {
 
             <div class="mt-4 block">
                 <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
+                    <Checkbox name="remember" v-model:checked="form.remember" class="border border-gray-300 rounded-md" />
                     <span class="ms-2 text-sm text-gray-600">Remember me</span>
                 </label>
             </div>
