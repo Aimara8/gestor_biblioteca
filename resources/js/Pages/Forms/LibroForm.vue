@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const menuFecha = ref(false);
@@ -26,6 +27,7 @@ const submitForm = () => {
 </script>
 
 <template>
+  <Head title="Añadir Libro" />
   <AuthenticatedLayout>
     <v-container class="max-w-md">
       <v-card elevation="8" class="rounded-lg">
