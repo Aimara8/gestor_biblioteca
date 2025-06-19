@@ -33,10 +33,12 @@ const $page = usePage();
                 </v-card>
             </v-col>
             <v-col cols="12" md="6" lg="4">
-                <v-card>
+                <v-card color="secondary" class="text-white">
                     <v-card-item>
                         <v-card-title>xx</v-card-title>
+                        <v-card-subtitle>xx</v-card-subtitle>
                         <v-card-text>
+                            xx
                         </v-card-text>
                     </v-card-item>
                 </v-card>
