@@ -5,7 +5,6 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 
-const showingNavigationDropdown = ref(false);
 </script>
 
 <template>
@@ -32,13 +31,13 @@ const showingNavigationDropdown = ref(false);
             <div class="flex-1 flex flex-col space-y-1 px-2 py-4">
 
                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')"
-                    class="flex items-center p-3 text-white text-lg border-none hover:bg-amber-700 active:bg-[#b37d00] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-amber-600">
+                    class="flex items-center p-1 text-white text-lg border-none hover:bg-amber-700 active:bg-[#b37d00] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-amber-600">
                     <v-icon class="mr-2">mdi-view-dashboard</v-icon>
                     Dashboard
                 </NavLink>
 
                 <NavLink :href="route('libros.index')" :active="route().current('libros.*')"
-                    class="flex items-center p-3 text-white text-lg border-none hover:bg-amber-700 active:bg-[#b37d00] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    class="flex items-center p-1 text-white text-lg border-none hover:bg-amber-700 active:bg-[#b37d00] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-amber-400">
                     <v-icon class="mr-2">mdi-book-open</v-icon>
                     Books
                 </NavLink>
