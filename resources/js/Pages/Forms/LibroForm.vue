@@ -1,45 +1,66 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { useForm } from '@inertiajs/vue3';
-import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
+import { useForm, usePage, router, Head } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
 
-const menuFecha = ref(false);
+const page = usePage()
+const libro = computed(() => page.props.libro) // puede ser null si es creación
+
+const menuFecha = ref(false)
+
 const form = useForm({
-  titulo: '',
-  autor: '',
-  genero: '',
-  editorial: '',
-  fecha_publicacion: '',
-  isbn: ''
-});
+  titulo: libro.value?.titulo ?? '',
+  autor: libro.value?.autor ?? '',
+  genero: libro.value?.genero ?? '',
+  editorial: libro.value?.editorial ?? '',
+  fecha_publicacion: libro.value?.fecha_publicacion ?? '',
+  isbn: libro.value?.isbn ?? '',
+})
 
+// Detecta si es edición o creación
+const esEdicion = computed(() => !!libro.value)
+
+// Enviar formulario
 const submitForm = () => {
-  form.post(route('libros.store'), {
-    onSuccess: () => {
-      form.reset();
-    },
-    onError: (errors) => {
-      console.error(errors);
-    }
-  });
-};
+  if (esEdicion.value) {
+    form.put(route('libros.update', libro.value.id), {
+      onSuccess: () => form.reset(),
+    })
+  } else {
+    form.post(route('libros.store'), {
+      onSuccess: () => form.reset(),
+    })
+  }
+}
+
+const formatDate = (date) => {
+  if (!date) return ''
+  const d = new Date(date)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 </script>
 
 <template>
-  <Head title="Añadir Libro" />
+  <Head :title="esEdicion ? 'Editar Libro' : 'Añadir Libro'" />
   <AuthenticatedLayout>
-    <v-container class="max-w-md">
+    <v-container class="max-w-md py-8">
       <v-card elevation="8" class="rounded-lg">
-        <!-- Header compacto -->
-        <v-card-title class="bg-blue-darken-2 white--text pa-4">
-          <v-icon color="white" class="mr-2">mdi-book-plus</v-icon>
-          <span class="text-h6">Nuevo Libro</span>
+        <!-- Header -->
+        <v-card-title
+          class="bg-blue-darken-2 white--text pa-4 d-flex align-center justify-space-between"
+        >
+          <div class="flex items-center">
+            <v-icon color="white" class="mr-2">
+              {{ esEdicion ? 'mdi-pencil' : 'mdi-book-plus' }}
+            </v-icon>
+            <span class="text-h6">
+              {{ esEdicion ? 'Editar Libro' : 'Nuevo Libro' }}
+            </span>
+          </div>
         </v-card-title>
 
         <v-card-text class="pa-4">
-          <v-form @submit.prevent="submitForm" class="mt-2">
-            <!-- Campos compactos -->
+          <v-form @submit.prevent="submitForm">
             <v-text-field
               v-model="form.titulo"
               label="Título"
@@ -47,9 +68,9 @@ const submitForm = () => {
               variant="outlined"
               density="compact"
               :error-messages="form.errors.titulo"
-              class="mb-2"
+              class="mb-3"
               required
-            ></v-text-field>
+            />
 
             <v-text-field
               v-model="form.autor"
@@ -58,9 +79,9 @@ const submitForm = () => {
               variant="outlined"
               density="compact"
               :error-messages="form.errors.autor"
-              class="mb-2"
+              class="mb-3"
               required
-            ></v-text-field>
+            />
 
             <v-text-field
               v-model="form.genero"
@@ -69,12 +90,11 @@ const submitForm = () => {
               variant="outlined"
               density="compact"
               :error-messages="form.errors.genero"
-              class="mb-2"
+              class="mb-3"
               required
-            ></v-text-field>
+            />
 
-            <!-- Fila 3: Editorial y Fecha en línea -->
-            <v-row class="mb-2" dense>
+            <v-row dense>
               <v-col cols="6">
                 <v-text-field
                   v-model="form.editorial"
@@ -84,8 +104,9 @@ const submitForm = () => {
                   density="compact"
                   :error-messages="form.errors.editorial"
                   required
-                ></v-text-field>
+                />
               </v-col>
+
               <v-col cols="6">
                 <v-menu
                   v-model="menuFecha"
@@ -94,7 +115,7 @@ const submitForm = () => {
                   offset-y
                   min-width="auto"
                 >
-                  <template v-slot:activator="{ on, attrs }">
+                  <template #activator="{ props }">
                     <v-text-field
                       v-model="form.fecha_publicacion"
                       label="Publicación"
@@ -102,19 +123,19 @@ const submitForm = () => {
                       readonly
                       variant="outlined"
                       density="compact"
-                      v-bind="attrs"
-                      v-on="on"
+                      v-bind="props"
                       :error-messages="form.errors.fecha_publicacion"
                       required
-                    ></v-text-field>
+                    />
                   </template>
                   <v-date-picker
                     v-model="form.fecha_publicacion"
-                    no-title
-                    scrollable
                     locale="es"
-                    @input="menuFecha = false"
-                  ></v-date-picker>
+                    @update:modelValue="(value) => { 
+                      form.fecha_publicacion = formatDate(value)
+                      menuFecha = false 
+                    }"
+                  />
                 </v-menu>
               </v-col>
             </v-row>
@@ -128,19 +149,18 @@ const submitForm = () => {
               :error-messages="form.errors.isbn"
               class="mb-3"
               required
-            ></v-text-field>
+            />
 
-            <!-- Botón compacto -->
-            <v-card-actions class="pa-0 justify-end">
+            <!-- Botones -->
+            <v-card-actions class="pa-0 justify-end mt-3">
               <v-btn
-                type="submit"
                 color="primary"
-                size="small"
+                type="submit"
                 :loading="form.processing"
                 :disabled="form.processing"
+                prepend-icon="mdi-content-save"
               >
-                <v-icon left size="small">mdi-content-save</v-icon>
-                Guardar
+                {{ esEdicion ? 'Actualizar' : 'Guardar' }}
               </v-btn>
             </v-card-actions>
           </v-form>
