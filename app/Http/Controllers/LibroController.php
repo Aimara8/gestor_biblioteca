@@ -32,7 +32,22 @@ class LibroController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validación de campos
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'genero' => 'required|string|max:255',
+            'editorial' => 'required|string|max:255',
+            'fecha_publicacion' => 'required|date',
+            'isbn' => 'required|string|max:20|unique:libros,isbn',
+        ]);
+
+        // Crear registro
+        Libro::create($validated);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('libros.index')
+            ->with('success', 'Libro añadido correctamente.');
     }
 
     /**
@@ -40,7 +55,11 @@ class LibroController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $libro = Libro::findOrFail($id);
+
+        return Inertia::render('Dashboard/LibroDetails', [
+            'libro' => $libro
+        ]);
     }
 
     /**
@@ -48,7 +67,11 @@ class LibroController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $libro = Libro::findOrFail($id);
+
+        return Inertia::render('Forms/LibroForm', [
+            'libro' => $libro,
+        ]);
     }
 
     /**
@@ -56,7 +79,24 @@ class LibroController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $libro = Libro::findOrFail($id);
+
+        // Validación de campos
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:255',
+            'autor' => 'required|string|max:255',
+            'genero' => 'required|string|max:255',
+            'editorial' => 'required|string|max:255',
+            'fecha_publicacion' => 'required|date',
+            'isbn' => 'required|string|max:20|unique:libros,isbn,' . $libro->id,
+        ]);
+
+        // Actualizar registro
+        $libro->update($validated);
+
+        // Redirigir con mensaje de éxito
+        return redirect()->route('libros.index')
+            ->with('success', 'Libro actualizado correctamente.');
     }
 
     /**
