@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/PHP-Laravel-red?logo=laravel"/>
   <img src="https://img.shields.io/badge/Vue.js-Frontend-blue?logo=vue.js"/>
   <img src="https://img.shields.io/badge/CRUD-Operaciones-success"/>
+  <img src="https://img.shields.io/badge/Status-In%20Progress-orange"/>
 </p>
 
 Aplicación web moderna para gestionar libros, usuarios y préstamos en una biblioteca, con autenticación segura de usuarios.
